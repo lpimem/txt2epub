@@ -53,7 +53,7 @@ class App:
     def build_book(self, epub_file, meta):
         def F(name):
             z = zipfile.ZipInfo(name)
-            z.external_attr = 0666 << 16L
+            z.external_attr = 0o666 << 16
             z.compress_type = zipfile.ZIP_DEFLATED
             return z
 
@@ -101,7 +101,7 @@ class App:
         chapter = {'idx': 0, 'name':'_', 'sections': [], 'default': section}
         line_style = LINE_STYLE_AUTO
 
-        for raw in fileinput.input(txt_file):
+        for raw in fileinput.input(txt_file, mode='rb'):
             try:
                 raw = raw.decode('utf-8')
             except:
@@ -126,6 +126,8 @@ class App:
                         line = tag_to + line
                     else:
                         line = line.replace(tag_from, tag_to)
+            
+            tag, val = None, None
 
             # 参数值
             m = re.match(u'#([a-z]+):(.*)', line)
